@@ -1,30 +1,65 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
-    <link rel="stylesheet" href="/css/style.css" >
+    <title>Price Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <main class="container">
-        <!-- Navbar which can be reused across other pages -->
-        <%- include('../partials/navbar'); %>
+    <h1>Price Tracker</h1>
+    <input type="text" id="item" placeholder="Enter item name">
+    <button onclick="addItem()">Add Item</button>
+    <ul id="itemList">
+        <!-- List of items will be displayed here -->
+    </ul>
 
-        <!-- Information about the about page -->
-        <div class="welcome-container">
-            <h1>About</h1>
-            <p>A short message from me</p>
-        </div>
-
-        <div class="about-container">
-            <img src="/images/about.jpg" alt="Picture of a van with a scenic landscape in the background">
-            <p>Welcome to my blog, the space where I share my thoughts, stories, and insights on a variety of topics that fascinate me, from personal reflections to wider cultural discussions. Launched in 2024, this blog aims to create a community of like-minded individuals who are looking for a mix of inspiration, entertainment, and thought-provoking content. Whether you're here for a quick read or to engage in deeper conversation, I'm glad you stopped by. Join me on this journey of exploration and let's discover the beauty and complexity of our world together.</p>
-            <br>
-            <a href="/">Read my blog!</a>
-        </div>
-
-    </main>
+    <script>
+        function addItem() {
+            var item = document.getElementById("item").value;
+            if (item.trim() === "") {
+                alert("Please enter an item name.");
+                return;
+            }
+            var listItem = document.createElement("li");
+            listItem.textContent = item;
+            document.getElementById("itemList").appendChild(listItem);
+            document.getElementById("item").value = "";
+        }
+    </script>
 </body>
 </html>
