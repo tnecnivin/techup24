@@ -14,9 +14,12 @@ datasource db {
 }
 
 // Post model represents individual blog posts
-model Post {
+model Product {
   id        Int       @id @default(autoincrement())
   product     String
-  currentPrice   String
+  size String
+  currentPrice   Float
+  fourWeekHigh Float
+  fourWeekLow Float
   imageURL String
 }

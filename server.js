@@ -34,7 +34,7 @@ app.get('/', async function(req, res) {
         // });
 
         // Get all products
-        const products = await prisma.post.findMany({
+        const products = await prisma.product.findMany({
           orderBy: [
             {
               id: 'desc'
