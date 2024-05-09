@@ -35,3 +35,8 @@
 .cancel-create-post {
     text-align: center;
 }
+
+.first-item {
+    color: green;
+    font-weight: bold;
+}

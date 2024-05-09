@@ -4,6 +4,7 @@
 <title>BEST PRICED SG</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/css/style.css" >
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
 <script src="https://kit.fontawesome.com/a171663cd9.js" crossorigin="anonymous"></script>
@@ -36,13 +37,19 @@
 <!-- !PAGE CONTENT! -->
 <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
     <!-- First Photo Grid-->
-    <div class="w3-row-padding w3-padding-16 w3-center" id="food">
+    <div class="w3-row-padding w3-padding-16 w3-center" id="product">
         <% products.forEach(p => { %>
             <div class="w3-quarter">
-                <img src=<%= p.imageURL %> alt=<%= p.product %> style="width:100%">
+                <img src=<%= p.imageURL %> alt=<%= p.product %> style="height: 100%; width:100%">
                 <h3><%= p.product %></h3>
-                <p><%= p.size %></p>
-                <p>$<%= p.currentPrice %></p>
+                <p><%= p.size %></p>        
+                <%
+                    const priceArray = Object.entries(p.price);
+                    priceArray.sort((a, b) => parseFloat(a[1]) - parseFloat(b[1]));
+                    priceArray.forEach(([store, price], index) => { %>
+                        <div class="<%= index === 0 ? 'first-item' : '' %>"><%= store %>: $<%= price %></div>
+                <% });            
+            %>
             </div>
         <% }); %>
     </div>

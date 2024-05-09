@@ -13,13 +13,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Post model represents individual blog posts
+// Product model represents individual item
 model Product {
   id        Int       @id @default(autoincrement())
   product     String
-  size String
-  currentPrice   Float
-  fourWeekHigh Float
-  fourWeekLow Float
-  imageURL String
+  size String @default("Unknown")
+  currentPrice   Float @default(0.0)
+  fourWeekHigh Float @default(0.0)
+  fourWeekLow Float @default(0.0)
+  imageURL String @default("None")
+  price Json @default("{}") 
+  others Json @default("{}")
+  thumbsUpCnt Int @default(0)
+  thumbsDownCnt Int @default(0)
 }
