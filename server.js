@@ -25,18 +25,31 @@ app.get('/', async function(req, res) {
     // Try-Catch for any errors
     try {
         // Get all blog posts
-        const blogs = await prisma.post.findMany({
-                orderBy: [
-                  {
-                    id: 'desc'
-                  }
-                ]
+        // const blogs = await prisma.post.findMany({
+        //         orderBy: [
+        //           {
+        //             id: 'desc'
+        //           }
+        //         ]
+        // });
+
+        // Get all products
+        const products = await prisma.post.findMany({
+          orderBy: [
+            {
+              id: 'desc'
+            }
+          ]
         });
 
+        console.log("Product = " + JSON.stringify(products));
+
         // Render the homepage with all the blog posts
-        await res.render('pages/home', { blogs: blogs });
+        // await res.render('pages/home', { blogs: blogs });
+        await res.render('pages/about', { products: products });
+
       } catch (error) {
-        res.render('pages/home');
+        res.render('pages/about');
         console.log(error);
       } 
 });
@@ -57,16 +70,16 @@ app.post('/new', async function(req, res) {
     // Try-Catch for any errors
     try {
         // Get the title and content from submitted form
-        const { title, content } = req.body;
+        const { product, currentPrice } = req.body;
 
         // Reload page if empty title or content
-        if (!title || !content) {
-            console.log("Unable to create new post, no title or content");
+        if (!product || !currentPrice) {
+            console.log("Unable to create new product, no pricing");
             res.render('pages/new');
         } else {
             // Create post and store in database
             const blog = await prisma.post.create({
-                data: { title, content },
+                data: { product, currentPrice },
             });
 
             // Redirect back to the homepage

@@ -27,8 +27,8 @@
         <!-- Show blog posts -->
         <% blogs.forEach(post => { %>
             <article class="post-container">
-                <h3><%= post.title %></h3>
-                <p><%= post.content %></p>
+                <h3><%= post.product %></h3>
+                <p><%= post.currentPrice %></p>
                 <form action="/delete/<%= post.id %>" method="post" onsubmit="return confirm('Do you really want to delete this post?');">
                     <button class="outline primary" type="submit">Delete</button>
                 </form>

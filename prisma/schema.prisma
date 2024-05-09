@@ -16,6 +16,7 @@ datasource db {
 // Post model represents individual blog posts
 model Post {
   id        Int       @id @default(autoincrement())
-  title     String
-  content   String
+  product     String
+  currentPrice   String
+  imageURL String
 }
