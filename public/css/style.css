@@ -41,3 +41,11 @@
     color: green;
     font-weight: bold;
 }
+
+.search-bar {
+    border-radius: 5px;
+}
+
+#productcard{
+    color: black;
+}
