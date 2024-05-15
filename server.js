@@ -24,15 +24,6 @@ app.get('/', async function(req, res) {
 
     // Try-Catch for any errors
     try {
-        // Get all blog posts
-        // const blogs = await prisma.post.findMany({
-        //         orderBy: [
-        //           {
-        //             id: 'desc'
-        //           }
-        //         ]
-        // });
-
         // Get all products
         const products = await prisma.product.findMany({
           orderBy: [
@@ -66,6 +57,11 @@ app.get('/new', function(req, res) {
 
 // Create a new post
 app.post('/new', async function(req, res) {
+    //1) Take in the input from users
+    //2) Look for the item in the DB
+    //3) Check if current price is cheaper 
+    //4) Set the price history if its cheaper
+
     
     // Try-Catch for any errors
     try {

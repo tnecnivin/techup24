@@ -18,21 +18,23 @@
 <!-- Top menu -->
 <div class="w3-top">
   <div class="w3-white" style="max-width:1200px;margin:auto">
-    <div class="w3-center w3-padding-16"><h1>BEST PRICED SG<i class="fa-solid fa-cart-shopping"></h1></i>
-        <p> 
-            <input type="text" id="mySearch" onkeyup="mySearchFunction()" placeholder="Search.." title="Type in a product">
-        </p>
+    <div class="w3-center"><h1>BEST PRICED SG</h1>
+      <p id = "topbar"> 
+        <input type="text" id="searchBar" onkeyup="mySearchFunction()" placeholder=" ">
+        <button type="button" id="searchBtn"> <i class="fa fa-search" aria-hidden="true"></i></button>
+      </p>
     </div>
   </div>
 </div>
-  
+
 <!-- !PAGE CONTENT! -->
 <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
+
     <!-- First Photo Grid-->
-    <div class="w3-row-padding w3-padding-16 w3-center " id="productcard">
+    <div id="productcard">
         <% products.forEach(p => { %>
-            <div class="w3-quarter">
-                <img src=<%= p.imageURL %> alt=<%= p.product %> style="height: 100%; width:100%">
+          <div class="w3-quarter product" data-product="<%= p.product.toLowerCase() %>">
+            <img src="<%= p.imageURL %>" alt="<%= p.product %>" style="height: 100%; width:100%" onclick="openModal('<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= p.price %>')">
                 <h3><%= p.product %></h3>
                 <p><%= p.size %></p>        
                 <%
@@ -47,31 +49,20 @@
     </div>
 </div>
   
-  <!-- Pagination -->
-  <div class="w3-center w3-padding-32">
-    <div class="w3-bar">
-      <a href="#" class="w3-bar-item w3-button w3-hover-black">«</a>
-      <a href="#" class="w3-bar-item w3-black w3-button">1</a>
-      <a href="#" class="w3-bar-item w3-button w3-hover-black">2</a>
-      <a href="#" class="w3-bar-item w3-button w3-hover-black">3</a>
-      <a href="#" class="w3-bar-item w3-button w3-hover-black">4</a>
-      <a href="#" class="w3-bar-item w3-button w3-hover-black">»</a>
-    </div>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+      <span class="close">&times;</span>
+      <img id="modalImage" src="" alt="" style="height: 300px; width: 300px;">
+      <h3 id="modalProduct"></h3>
+      <p id="modalSize"></p>
+      <label for="newDescription">New Description:</label>
+      <input type="text" id="newDescription"><br><br>
+      <label for="newPrice">New Price:</label>
+      <input type="number" id="newPrice" step="0.01"><br><br>
+      <button id="saveButton">Save</button>
   </div>
-  
-  <hr id="about">
-
-  <!-- About Section -->
-  <div class="w3-container w3-padding-32 w3-center">  
-    <h3>About Me, The Food Man</h3><br>
-    <img src="/w3images/chef.jpg" alt="Me" class="w3-image" style="display:block;margin:auto" width="800" height="533">
-    <div class="w3-padding-32">
-      <h4><b>I am Who I Am!</b></h4>
-      <h6><i>With Passion For Real, Good Food</i></h6>
-      <p>Just me, myself and I, exploring the universe of unknownment. I have a heart of love and an interest of lorem ipsum and mauris neque quam blog. I want to share my world with you. Praesent tincidunt sed tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Praesent tincidunt sed tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>
-    </div>
-  </div>
-  <hr>
+</div>
   
   <!-- Footer -->
   <footer class="w3-row-padding w3-padding-32">
@@ -128,6 +119,56 @@ function mySearchFunction() {
     console.log("input=" + input);
 
 }
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// Function to open the modal
+function openModal(imageURL, product, size, price) {
+    document.getElementById("modalImage").src = imageURL;
+    document.getElementById("modalProduct").innerText = product;
+    document.getElementById("modalSize").innerText = size;
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Handle the save button click
+document.getElementById("saveButton").onclick = function() {
+    var newDescription = document.getElementById("newDescription").value;
+    var newPrice = document.getElementById("newPrice").value;
+    alert("New Description: " + newDescription + "\nNew Price: $" + newPrice);
+    modal.style.display = "none";
+}
+
+function mySearchFunction() {
+        var input, filter, products, product, i;
+        input = document.getElementById('searchBar');
+        filter = input.value.toLowerCase();
+        products = document.getElementsByClassName('product');
+
+        for (i = 0; i < products.length; i++) {
+            product = products[i].getAttribute('data-product');
+            if (product.includes(filter)) {
+                products[i].style.display = '';
+            } else {
+                products[i].style.display = 'none';
+            }
+        }
+    }
 </script>
 
 </body>
