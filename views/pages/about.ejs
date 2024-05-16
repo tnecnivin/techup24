@@ -203,7 +203,7 @@ document.getElementById("saveButton").onclick = async function() {
 
     if (result.ok) {
       alert("New Description: " + newSource + "\nNew Price: $" + latestPrice);
-      // Optionally update the UI to reflect the new price
+      window.location.reload();
     } else {
       alert("Error: " + result.error);
     }
