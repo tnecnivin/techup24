@@ -40,7 +40,7 @@
                 <%
                     const priceArray = Object.entries(p.price);
                     priceArray.sort((a, b) => parseFloat(a[1]) - parseFloat(b[1]));
-                    priceArray.forEach(([store, price], index) => { %>
+                    priceArray.slice(0,5).forEach(([store, price], index) => { %>
                         <div class="<%= index === 0 ? 'first-item' : '' %>"><%= store %>: $<%= price %></div>
                 <% });            
             %>
