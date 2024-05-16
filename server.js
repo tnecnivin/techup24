@@ -45,50 +45,35 @@ app.get('/', async function(req, res) {
       } 
 });
 
-// About page
-app.get('/about', function(req, res) {
-    res.render('pages/about');
-});
-
-// New post page
-app.get('/new', function(req, res) {
-    res.render('pages/new');
-});
-
-// Create a new post
-app.post('/new', async function(req, res) {
-  const { newSource, latestPrice } = req.body;
-
+app.post('/update-price', async function(req, res) {
   try {
-      const newProduct = await prisma.product.create({
-          data: {
-              source: newSource,
-              price: parseFloat(latestPrice)
-          }
-      });
-      res.status(201).json(newProduct);
-  } catch (error) {
-      console.error('Error creating product:', error);
-      res.status(500).json({ error: 'Failed to create product' });
-  }
+    const product = await prisma.product.findUnique({
+      where: {
+        id: parseInt(req.body.productId)
+      },
+    });
+
+    const price = product.price;
+    price[req.body.newSource] = req.body.latestPrice;
+    
+    // Update the product with the modified price
+    const updatedProduct = await prisma.product.update({
+      where: {
+        id: parseInt(req.body.productId),
+      },
+      data: {
+        price: price,
+      },
+    });
+    
+    res.json({ ok: true, message: 'Product price updated successfully' });
+
+    } catch (error) {
+      res.render('pages/about');
+      console.log(error);
+    } 
 });
 
-// Delete a post by id
-app.post("/delete/:id", async (req, res) => {
-    const { id } = req.params;
-    
-    try {
-        await prisma.post.delete({
-            where: { id: parseInt(id) },
-        });
-      
-        // Redirect back to the homepage
-        res.redirect('/');
-    } catch (error) {
-        console.log(error);
-        res.redirect('/');
-    }
-  });
 
 // Tells the app which port to run on
 app.listen(8080);

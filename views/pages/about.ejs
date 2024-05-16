@@ -34,7 +34,7 @@
         <% products.forEach(p => { %>
           <div class="w3-quarter product" data-product="<%= p.product.toLowerCase() %>">
             <img src="<%= p.imageURL %>" alt="<%= p.product %>" style="height: 100%; width:100%" 
-              onclick="openModal('<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= JSON.stringify(p.price) %>')">
+              onclick="openModal('<%= p.id %>','<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= JSON.stringify(p.price) %>')">
                 <h3><%= p.product %></h3>
                 <p><%= p.size %></p>        
                 <%
@@ -56,6 +56,7 @@
       <div id ="modalInfo">
         <img id="modalImage" src="" alt="">
         <p>
+          <label id="productId"></label>
           <label id="modalProduct"></label>
           <label id="modalSize"></label>
           <label id="modalCurrentPrice"></label>
@@ -142,24 +143,19 @@ var modal = document.getElementById("myModal");
 var span = document.getElementsByClassName("close")[0];
 
 // Function to open the modal
-function openModal(imageURL, product, size, price) {
-    document.getElementById("modalImage").src = imageURL;
-    document.getElementById("modalProduct").innerText = product;
-    document.getElementById("modalSize").innerText = size;
-    const priceObject = JSON.parse(price);
-    // Sort the price array
-    const priceArray = Object.entries(priceObject);
-    priceArray.sort((a, b) => parseFloat(a[1]) - parseFloat(b[1]));
+function openModal(productId, imageURL, product, size, price) {
+  document.getElementById("productId").innerText = productId;
+  document.getElementById("modalImage").src = imageURL;
+  document.getElementById("modalProduct").innerText = product;
+  document.getElementById("modalSize").innerText = size;
+  const priceObject = JSON.parse(price);
+  // Sort the price array
+  const priceArray = Object.entries(priceObject);
+  priceArray.sort((a, b) => parseFloat(a[1]) - parseFloat(b[1]));
 
-    // Display the first price in the modal
-    // document.getElementById("modalCurrentPrice").innerText = `${priceArray[0][0]}: $${priceArray[0][1]}`;
-    document.getElementById("modalCurrentPrice").innerText = JSON.stringify(priceArray);
+  document.getElementById("modalCurrentPrice").innerText = JSON.stringify(priceArray);
 
-    modal.style.display = "block";
-
-    // Enter new price 
-
-    // Post into DB
+  modal.style.display = "block";
 }
 
 // When the user clicks on <span> (x), close the modal
@@ -176,28 +172,46 @@ window.onclick = function(event) {
 
 // Handle the save button click
 document.getElementById("saveButton").onclick = async function() {
-  var product= document.getElementById("product").value;
   var newSource = document.getElementById("newSource").value;
   var latestPrice = document.getElementById("latestPrice").value;
+  var productName = document.getElementById("modalProduct").innerText;
+  var productId = document.getElementById("productId").innerText;
+  console.log("productId= " + productId);
+  // Validate input values
+  if (!newSource || !latestPrice) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
   // Send the new data to the server
   try {
-      let response = await fetch('/new', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ newSource, latestPrice })
-      });
-      let result = await response.json();
-      if (response.ok) {
-          alert("New Description: " + newSource + "\nNew Price: $" + latestPrice);
-      } else {
-          alert("Error: " + result.error);
-      }
+    let response = await fetch('/update-price', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productId,
+        productName,
+        newSource,
+        latestPrice
+      })
+    });
+
+    let result = await response.json();
+    console.log("response= "+ result);
+
+    if (result.ok) {
+      alert("New Description: " + newSource + "\nNew Price: $" + latestPrice);
+      // Optionally update the UI to reflect the new price
+    } else {
+      alert("Error: " + result.error);
+    }
   } catch (error) {
-      console.error('Error:', error);
-      alert("An error occurred while saving the data.");
+    console.error('Error:', error);
+    alert("An error occurred while saving the data.");
   }
+
   modal.style.display = "none";
 }
 
