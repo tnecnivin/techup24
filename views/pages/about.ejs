@@ -34,7 +34,7 @@
         <% products.forEach(p => { %>
           <div class="w3-quarter product" data-product="<%= p.product.toLowerCase() %>">
             <img src="<%= p.imageURL %>" alt="<%= p.product %>" style="height: 100%; width:100%" 
-              onclick="openModal('<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= Object.entries(p.price) %>')">
+              onclick="openModal('<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= JSON.stringify(p.price) %>')">
                 <h3><%= p.product %></h3>
                 <p><%= p.size %></p>        
                 <%
@@ -53,7 +53,20 @@
 <div id="myModal" class="modal">
   <div class="modal-content">
       <span class="close">&times;</span>
-      <img id="modalImage" src="" alt="">
+      <div id ="modalInfo">
+        <img id="modalImage" src="" alt="">
+        <p>
+          <label id="modalProduct"></label>
+          <label id="modalSize"></label>
+          <label id="modalCurrentPrice"></label>
+        </p>
+      </div>
+      <label for="Source">Source:</label>
+      <input type="text" id="newSource"><br><br>
+      <label for="latestPrice">Latest Price:</label>
+      <input type="number" id="latestPrice"><br><br>
+      <button id="saveButton">Save</button> 
+
       <!-- <p id="modalProduct"></p>
       <p id="modalSize"></p>
       <p id="modalPrice"></p>
@@ -131,10 +144,22 @@ var span = document.getElementsByClassName("close")[0];
 // Function to open the modal
 function openModal(imageURL, product, size, price) {
     document.getElementById("modalImage").src = imageURL;
-    // document.getElementById("modalProduct").innerText = product;
-    // document.getElementById("modalSize").innerText = size;
-    // console.log("openModal=" + imageURL + ", " + product + ", " + size + ", " + price);
+    document.getElementById("modalProduct").innerText = product;
+    document.getElementById("modalSize").innerText = size;
+    const priceObject = JSON.parse(price);
+    // Sort the price array
+    const priceArray = Object.entries(priceObject);
+    priceArray.sort((a, b) => parseFloat(a[1]) - parseFloat(b[1]));
+
+    // Display the first price in the modal
+    // document.getElementById("modalCurrentPrice").innerText = `${priceArray[0][0]}: $${priceArray[0][1]}`;
+    document.getElementById("modalCurrentPrice").innerText = JSON.stringify(priceArray);
+
     modal.style.display = "block";
+
+    // Enter new price 
+
+    // Post into DB
 }
 
 // When the user clicks on <span> (x), close the modal
