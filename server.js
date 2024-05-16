@@ -57,35 +57,20 @@ app.get('/new', function(req, res) {
 
 // Create a new post
 app.post('/new', async function(req, res) {
-    //1) Take in the input from users
-    //2) Look for the item in the DB
-    //3) Check if current price is cheaper 
-    //4) Set the price history if its cheaper
+  const { newSource, latestPrice } = req.body;
 
-    
-    // Try-Catch for any errors
-    try {
-        // Get the title and content from submitted form
-        const { product, currentPrice } = req.body;
-
-        // Reload page if empty title or content
-        if (!product || !currentPrice) {
-            console.log("Unable to create new product, no pricing");
-            res.render('pages/new');
-        } else {
-            // Create post and store in database
-            const blog = await prisma.post.create({
-                data: { product, currentPrice },
-            });
-
-            // Redirect back to the homepage
-            res.redirect('/');
-        }
-      } catch (error) {
-        console.log(error);
-        res.render('pages/new');
-      }
-
+  try {
+      const newProduct = await prisma.product.create({
+          data: {
+              source: newSource,
+              price: parseFloat(latestPrice)
+          }
+      });
+      res.status(201).json(newProduct);
+  } catch (error) {
+      console.error('Error creating product:', error);
+      res.status(500).json({ error: 'Failed to create product' });
+  }
 });
 
 // Delete a post by id

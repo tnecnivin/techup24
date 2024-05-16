@@ -15,9 +15,9 @@
 </head>
 <body>
 
-<!-- Top menu -->
+<!-- Top menu with search bar -->
 <div class="w3-top">
-  <div class="w3-white" style="max-width:1200px;margin:auto">
+  <div class="w3-white" id="topdiv">
     <div class="w3-center"><h1>BEST PRICED SG</h1>
       <p id = "topbar"> 
         <input type="text" id="searchBar" onkeyup="mySearchFunction()" placeholder=" ">
@@ -27,14 +27,14 @@
   </div>
 </div>
 
-<!-- !PAGE CONTENT! -->
-<div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
-
+<!-- !PAGE CONTENT displaying all the products! -->
+<div class="w3-main w3-content w3-padding" id="productdiv" >
     <!-- First Photo Grid-->
     <div id="productcard">
         <% products.forEach(p => { %>
           <div class="w3-quarter product" data-product="<%= p.product.toLowerCase() %>">
-            <img src="<%= p.imageURL %>" alt="<%= p.product %>" style="height: 100%; width:100%" onclick="openModal('<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= p.price %>')">
+            <img src="<%= p.imageURL %>" alt="<%= p.product %>" style="height: 100%; width:100%" 
+              onclick="openModal('<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= Object.entries(p.price) %>')">
                 <h3><%= p.product %></h3>
                 <p><%= p.size %></p>        
                 <%
@@ -53,14 +53,16 @@
 <div id="myModal" class="modal">
   <div class="modal-content">
       <span class="close">&times;</span>
-      <img id="modalImage" src="" alt="" style="height: 300px; width: 300px;">
-      <h3 id="modalProduct"></h3>
+      <img id="modalImage" src="" alt="">
+      <!-- <p id="modalProduct"></p>
       <p id="modalSize"></p>
-      <label for="newDescription">New Description:</label>
-      <input type="text" id="newDescription"><br><br>
-      <label for="newPrice">New Price:</label>
-      <input type="number" id="newPrice" step="0.01"><br><br>
-      <button id="saveButton">Save</button>
+      <p id="modalPrice"></p>
+
+      <label for="Source">Source:</label>
+      <input type="text" id="newSource"><br><br>
+      <label for="latestPrice">Latest Price:</label>
+      <input type="number" id="latestPrice" step="0.01"><br><br>
+      <button id="saveButton">Save</button> -->
   </div>
 </div>
   
@@ -129,8 +131,9 @@ var span = document.getElementsByClassName("close")[0];
 // Function to open the modal
 function openModal(imageURL, product, size, price) {
     document.getElementById("modalImage").src = imageURL;
-    document.getElementById("modalProduct").innerText = product;
-    document.getElementById("modalSize").innerText = size;
+    // document.getElementById("modalProduct").innerText = product;
+    // document.getElementById("modalSize").innerText = size;
+    // console.log("openModal=" + imageURL + ", " + product + ", " + size + ", " + price);
     modal.style.display = "block";
 }
 
@@ -147,11 +150,30 @@ window.onclick = function(event) {
 }
 
 // Handle the save button click
-document.getElementById("saveButton").onclick = function() {
-    var newDescription = document.getElementById("newDescription").value;
-    var newPrice = document.getElementById("newPrice").value;
-    alert("New Description: " + newDescription + "\nNew Price: $" + newPrice);
-    modal.style.display = "none";
+document.getElementById("saveButton").onclick = async function() {
+  var product= document.getElementById("product").value;
+  var newSource = document.getElementById("newSource").value;
+  var latestPrice = document.getElementById("latestPrice").value;
+  // Send the new data to the server
+  try {
+      let response = await fetch('/new', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ newSource, latestPrice })
+      });
+      let result = await response.json();
+      if (response.ok) {
+          alert("New Description: " + newSource + "\nNew Price: $" + latestPrice);
+      } else {
+          alert("Error: " + result.error);
+      }
+  } catch (error) {
+      console.error('Error:', error);
+      alert("An error occurred while saving the data.");
+  }
+  modal.style.display = "none";
 }
 
 function mySearchFunction() {
