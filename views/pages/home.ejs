@@ -1,38 +1,164 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BEST PRICED SG</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
     <link rel="stylesheet" href="/css/style.css" >
-    <script src="https://kit.fontawesome.com/a171663cd9.js" crossorigin="anonymous"></script>
+    <style>
+        body, h1, h2, h3, h4, h5, h6 {
+            font-family: "Karma", sans-serif;
+        }
+        .first-item {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <main class="container">
-        <!-- Navbar which can be reused across other pages -->
-        <%- include('../partials/navbar'); %>
 
-        <!-- Information welcoming visitors to my page -->
-        <div class="welcome-container">
-            <h1><i class="fa-solid fa-user"></i> Welcome to SG PRICE CHECKER</h1>
-            <h2>Find out the latest price trend for a product</h2>
+<!-- Top menu with search bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">BEST PRICED SG</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <form class="form-inline ml-auto">
+                <input class="form-control mr-sm-2" type="search" id="searchBar" onkeyup="mySearchFunction()" placeholder="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="searchBtn"><i class="fa fa-search" aria-hidden="true"></i></button>
+            </form>
         </div>
+    </div>
+</nav>
 
-        <div class="new-post-btn-container">
-           <a href="/new" class="button" role="button">+ New Post</a>
+<!-- Page content displaying all the products -->
+<div class="container mt-5 pt-5">
+    <div class="row" id="productdiv">
+        <% products.forEach(p => { %>
+        <div class="col-md-4 mb-4 product-item" data-product="<%= p.product.toLowerCase() %>">
+            <div class="card">
+                <img src="<%= p.imageURL %>" class="card-img-top" alt="<%= p.product %>" 
+                     onclick="openModal('<%= p.id %>', '<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= JSON.stringify(p.price) %>')">
+                <div class="card-body">
+                    <h5 class="card-title"><%= p.product %></h5>
+                    <p class="card-text"><%= p.size %></p>
+                    <%
+                        const priceArray = Object.entries(p.price);
+                        priceArray.sort((a, b) => parseFloat(a[1]) - parseFloat(b[1]));
+                        priceArray.slice(0, 5).forEach(([store, price], index) => { %>
+                            <div class="<%= index === 0 ? 'first-item' : '' %>"><%= store %>: $<%= price %></div>
+                    <% }); %>
+                </div>
+            </div>
         </div>
-
-        <!-- Show blog posts -->
-        <% blogs.forEach(post => { %>
-            <article class="post-container">
-                <h3><%= post.product %></h3>
-                <p><%= post.currentPrice %></p>
-                <form action="/delete/<%= post.id %>" method="post" onsubmit="return confirm('Do you really want to delete this post?');">
-                    <button class="outline primary" type="submit">Delete</button>
-                </form>
-            </article>
         <% }); %>
-    </main>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Product Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" class="img-fluid" alt="">
+                <p id="productId" class="d-none"></p>
+                <p><strong>Product:</strong> <span id="modalProduct"></span></p>
+                <p><strong>Size:</strong> <span id="modalSize"></span></p>
+                <p><strong>Current Prices:</strong> <span id="modalCurrentPrice"></span></p>
+                <div class="form-group">
+                    <label for="newSource">Source</label>
+                    <input type="text" class="form-control" id="newSource">
+                </div>
+                <div class="form-group">
+                    <label for="latestPrice">Latest Price</label>
+                    <input type="number" class="form-control" id="latestPrice">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function mySearchFunction() {
+        var input, filter, products, product, i;
+        input = document.getElementById('searchBar');
+        filter = input.value.toLowerCase();
+        products = document.getElementsByClassName('product-item');
+
+        for (i = 0; i < products.length; i++) {
+            product = products[i].getAttribute('data-product');
+            if (product.includes(filter)) {
+                products[i].style.display = '';
+            } else {
+                products[i].style.display = 'none';
+            }
+        }
+    }
+
+    function openModal(productId, imageURL, product, size, price) {
+        document.getElementById("productId").innerText = productId;
+        document.getElementById("modalImage").src = imageURL;
+        document.getElementById("modalProduct").innerText = product;
+        document.getElementById("modalSize").innerText = size;
+        const priceObject = JSON.parse(price);
+        const priceArray = Object.entries(priceObject).sort((a, b) => parseFloat(a[1].price) - parseFloat(b[1].price));
+        document.getElementById("modalCurrentPrice").innerText = JSON.stringify(priceArray);
+        $('#myModal').modal('show');
+    }
+
+    document.getElementById("saveButton").onclick = async function() {
+        var newSource = document.getElementById("newSource").value;
+        var latestPrice = document.getElementById("latestPrice").value;
+        var productName = document.getElementById("modalProduct").innerText;
+        var productId = document.getElementById("productId").innerText;
+        if (!newSource || !latestPrice) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        try {
+            let response = await fetch('/update-price', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productId,
+                    productName,
+                    newSource,
+                    latestPrice
+                })
+            });
+
+            let result = await response.json();
+            if (result.ok) {
+                alert("New Source: " + newSource + "\nNew Price: $" + latestPrice);
+                window.location.reload();
+            } else {
+                alert("Error: " + result.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert("An error occurred while saving the data.");
+        }
+
+        $('#myModal').modal('hide');
+    }
+</script>
+
 </body>
 </html>

@@ -1,49 +1,5 @@
-.welcome-container {
-    text-align: center;
-
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-
-.new-post-btn-container{
-    text-align: center;
-
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-
-.post-container {
-    max-width: 800px;
-
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.about-container {
-    text-align: center;
-
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-
-.about-container > img{
-    margin-bottom: 40px;
-}
-
-.cancel-create-post {
-    text-align: center;
-}
-
-.first-item {
-    font-size: large;
-    color: green;
-    font-weight: bold;
-}
-
 #searchBar {
-    width: 25%;
+    width: 50%;
     padding-right: 40px; /* Make space for the icon */
     box-sizing: border-box;
 }
@@ -57,110 +13,10 @@
     right: 2%
 }
 
-.modal {
-    display: none;
-    position:fixed;
-    z-index: 1;
-    width: 50%;
-    height: 60%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    overflow: auto;
-}
-.modal-content {
-    background-color: #fefefe;
-    margin: 0 auto; /* Center within the modal */
-    padding: 2px;
-    border: 5px solid #888;
-}
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
 #topbar{
     padding: 10px;
 }
 
-#productcard{
-    padding: 10px;
-}
-
-#topdiv{
-    max-width: 1200px;
-    margin: auto;
-}
-
-#modalImage{
-    height: 300px; 
-    width: 300px;
-}
-
-#productdiv{
-    max-width:1200px;
-    margin-top:100px;
-}
-
-#modalProduct{
-    font-weight:bold;
-}
-
-#modalInfo{
-    display: flex;
-}
-
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 items per row */
-    gap: 5px; /* Space between the items */
-    padding: 16px; /* Padding around the grid */
-}
-
-.product-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f9f9f9;
-    padding: 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    transition: transform 0.3s ease;
-}
-
-.product-item img {
-    width: 100%;
-    height: auto;
-    cursor: pointer;
-    margin-bottom: 8px;
-}
-
-.product-item h3 {
-    margin: 8px 0;
-    font-size: 1.2em;
-    text-align: center;
-}
-
-.product-item p {
-    margin: 4px 0;
-    font-size: 1em;
-    text-align: center;
-}
-
-.product-item div {
-    margin: 2px 0;
-    font-size: 0.9em;
-}
-
-/* Add a hover effect for each product item */
-.product-item:hover {
-    transform: scale(1.05);
+.card-body{
+    min-height: 250px;
 }

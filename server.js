@@ -37,10 +37,10 @@ app.get('/', async function(req, res) {
 
         // Render the homepage with all the blog posts
         // await res.render('pages/home', { blogs: blogs });
-        await res.render('pages/about', { products: products });
+        await res.render('pages/home', { products: products });
 
       } catch (error) {
-        res.render('pages/about');
+        res.render('pages/home');
         console.log(error);
       } 
 });
