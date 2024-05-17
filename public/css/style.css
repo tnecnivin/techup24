@@ -118,5 +118,49 @@
     display: flex;
 }
 
-#productId{
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+    gap: 5px; /* Space between the items */
+    padding: 16px; /* Padding around the grid */
+}
+
+.product-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+
+.product-item img {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.product-item h3 {
+    margin: 8px 0;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.product-item p {
+    margin: 4px 0;
+    font-size: 1em;
+    text-align: center;
+}
+
+.product-item div {
+    margin: 2px 0;
+    font-size: 0.9em;
+}
+
+/* Add a hover effect for each product item */
+.product-item:hover {
+    transform: scale(1.05);
 }
