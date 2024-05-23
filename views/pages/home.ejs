@@ -1,164 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BEST PRICED SG</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
-    <link rel="stylesheet" href="/css/style.css" >
-    <style>
-        body, h1, h2, h3, h4, h5, h6 {
-            font-family: "Karma", sans-serif;
-        }
-        .first-item {
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Best Price Sg</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<!-- Top menu with search bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="#">BEST PRICED SG</a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <form class="form-inline ml-auto">
-                <input class="form-control mr-sm-2" type="search" id="searchBar" onkeyup="mySearchFunction()" placeholder="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="searchBtn"><i class="fa fa-search" aria-hidden="true"></i></button>
-            </form>
-        </div>
-    </div>
-</nav>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-4MWE3VMPWV"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-<!-- Page content displaying all the products -->
-<div class="container mt-5 pt-5">
-    <div class="row" id="productdiv">
-        <% products.forEach(p => { %>
-        <div class="col-md-4 mb-4 product-item" data-product="<%= p.product.toLowerCase() %>">
-            <div class="card">
-                <img src="<%= p.imageURL %>" class="card-img-top" alt="<%= p.product %>" 
-                     onclick="openModal('<%= p.id %>', '<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= JSON.stringify(p.price) %>')">
-                <div class="card-body">
-                    <h5 class="card-title"><%= p.product %></h5>
-                    <p class="card-text"><%= p.size %></p>
-                    <%
-                        const priceArray = Object.entries(p.price);
-                        priceArray.sort((a, b) => parseFloat(a[1]) - parseFloat(b[1]));
-                        priceArray.slice(0, 5).forEach(([store, price], index) => { %>
-                            <div class="<%= index === 0 ? 'first-item' : '' %>"><%= store %>: $<%= price %></div>
-                    <% }); %>
-                </div>
-            </div>
-        </div>
-        <% }); %>
-    </div>
-</div>
-
-<!-- The Modal -->
-<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Product Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <img id="modalImage" src="" class="img-fluid" alt="">
-                <p id="productId" class="d-none"></p>
-                <p><strong>Product:</strong> <span id="modalProduct"></span></p>
-                <p><strong>Size:</strong> <span id="modalSize"></span></p>
-                <p><strong>Current Prices:</strong> <span id="modalCurrentPrice"></span></p>
-                <div class="form-group">
-                    <label for="newSource">Source</label>
-                    <input type="text" class="form-control" id="newSource">
-                </div>
-                <div class="form-group">
-                    <label for="latestPrice">Latest Price</label>
-                    <input type="number" class="form-control" id="latestPrice">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="saveButton">Save</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-    function mySearchFunction() {
-        var input, filter, products, product, i;
-        input = document.getElementById('searchBar');
-        filter = input.value.toLowerCase();
-        products = document.getElementsByClassName('product-item');
-
-        for (i = 0; i < products.length; i++) {
-            product = products[i].getAttribute('data-product');
-            if (product.includes(filter)) {
-                products[i].style.display = '';
-            } else {
-                products[i].style.display = 'none';
+            gtag('config', 'G-4MWE3VMPWV');
+        </script>
+        <style>
+            body, h1, h2, h3, h4, h5, h6 {
+                font-family: "Lato", sans-serif;
             }
-        }
-    }
+            .first-item {
+                font-weight: bold;
+            }
+            .min-h-400 {
+            min-height: 400px;
+            }
+            .first-item{
+                font-weight: bold;
+                color: green;
+            }
+        </style>
+    </head>
+    <body>
 
-    function openModal(productId, imageURL, product, size, price) {
-        document.getElementById("productId").innerText = productId;
-        document.getElementById("modalImage").src = imageURL;
-        document.getElementById("modalProduct").innerText = product;
-        document.getElementById("modalSize").innerText = size;
-        const priceObject = JSON.parse(price);
-        const priceArray = Object.entries(priceObject).sort((a, b) => parseFloat(a[1].price) - parseFloat(b[1].price));
-        document.getElementById("modalCurrentPrice").innerText = JSON.stringify(priceArray);
-        $('#myModal').modal('show');
-    }
+        <!-- Top menu with search bar -->
+        <header data-bs-theme="dark">
+            <div class="navbar navbar-dark bg-dark shadow-sm">
+                <div class="container">
+                    <a href="#" class="navbar-brand d-flex align-items-center">
+                        <i class="bi bi-cart4 mr-sm-2"></i>
+                        <strong>Best Price SG</strong>
+                    </a>
+                    <form class="form-inline ml-auto">
+                        <input class="form-control mr-sm-2" type="search" id="searchBar" onkeyup="mySearchFunction()" placeholder="Search">
+                    </form>
+                </div>
+            </div>
+        </header>
+        <main>
+            <section class="py-5 text-center container">
+                <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light">Problem Statement</h1>
+                    <p class="lead text-body-secondary">Households are overspending on necessities, leading to a significant increase in their expenses. This is due to the numerous sources available for purchasing products, each offering different prices. Comparing prices between supermarkets can be very troublesome.</p>
+                </div>
+                </div>
+            </section>  
 
-    document.getElementById("saveButton").onclick = async function() {
-        var newSource = document.getElementById("newSource").value;
-        var latestPrice = document.getElementById("latestPrice").value;
-        var productName = document.getElementById("modalProduct").innerText;
-        var productId = document.getElementById("productId").innerText;
-        if (!newSource || !latestPrice) {
-            alert("Please fill in all fields.");
-            return;
-        }
+            <!-- Page content displaying all the products -->
+            <div class="album py-5 bg-body-tertiary">
+                <div class="container">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="productdiv">
+                        <% products.forEach(p => { %>
+                        <div class="col product-item" data-product="<%= p.product.toLowerCase() %>">
+                            <div class="card shadow-sm">
+                                <img src="<%= p.imageURL %>" class="card-img-top" alt="<%= p.product %>" 
+                                    onclick="openModal('<%= p.id %>', '<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= JSON.stringify(p.price) %>')">
+                                <div class="card-body min-h-400">
+                                    <h5 class="card-title"><%= p.product %></h5>
+                                    <p class="card-text"><%= p.size %></p>
+                                    <ul class="list-group list-group-flush">
+                                    <%
+                                    const priceArray = Object.entries(p.others);
+                                    priceArray.sort((a, b) => parseFloat(a[1].price) - parseFloat(b[1].price));
+                                    priceArray.slice(0, 5).forEach(([store, details], index) => { %>
+                                        <li class="list-group-item">
+                                        <div class="<%= index === 0 ? 'first-item' : '' %>">
+                                            <%= store %>: $<%= details.price %> 
+                                        </div>                                            
+                                        <button class="btn my-2 my-sm-0" type="button" id="upBtn"><i class="bi bi-hand-thumbs-up"><%= details.thumbsUp%></i></button>
+                                        <button class="btn my-2 my-sm-0" type="button" id="downBtn"><i class="bi bi-hand-thumbs-down"><%= details.thumbsDown%></i></button>
+                                        <figcaption class="figure-caption"><%= details.lastUpdated %> </figcaption> 
+                                        </li>
+                                    <% }); %>
 
-        try {
-            let response = await fetch('/update-price', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    productId,
-                    productName,
-                    newSource,
-                    latestPrice
-                })
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form to add in new product -->
+            <section class="container mt-5">
+                <h2>Submit a New Product</h2>
+                <form id="newProductForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" class="form-control" id="productName" name="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productSource">Source</label>
+                        <input type="text" class="form-control" id="productSource" name="productSource" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price</label>
+                        <input type="number" class="form-control" id="productPrice" name="productPrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCurrency">Currency</label>
+                        <input type="text" class="form-control" id="productCurrency" name="productCurrency" value="SGD" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImage">Product Image</label>
+                        <input type="file" class="form-control-file" id="productImage" name="productImage" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Product</button>
+                </form>
+            </section>
+        </main>
+ 
+        <footer class="text-body-secondary py-5">
+            <div class="container">
+                <p class="float-end mb-1">
+                    <a href="#">Back to top</a>
+                </p>
+            </div>
+        </footer>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Product Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="modalImage" src="" class="img-fluid" alt="">
+                        <p id="productId" class="d-none"></p>
+                        <p><strong>Product:</strong> <span id="modalProduct"></span></p>
+                        <p><strong>Size:</strong> <span id="modalSize"></span></p>
+                        <p><strong>Current Prices:</strong> <span id="modalCurrentPrice"></span></p>
+                        <div class="form-group">
+                            <label for="newSource">Source</label>
+                            <input type="text" class="form-control" id="newSource">
+                        </div>
+                        <div class="form-group">
+                            <label for="latestPrice">Latest Price</label>
+                            <input type="number" class="form-control" id="latestPrice">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function mySearchFunction() {
+                var input, filter, products, product, i;
+                input = document.getElementById('searchBar');
+                filter = input.value.toLowerCase();
+                products = document.getElementsByClassName('product-item');
+
+                for (i = 0; i < products.length; i++) {
+                    product = products[i].getAttribute('data-product');
+                    if (product.includes(filter)) {
+                        products[i].style.display = '';
+                    } else {
+                        products[i].style.display = 'none';
+                    }
+                }
+            }
+
+            function openModal(productId, imageURL, product, size, price) {
+                document.getElementById("productId").innerText = productId;
+                document.getElementById("modalImage").src = imageURL;
+                document.getElementById("modalProduct").innerText = product;
+                document.getElementById("modalSize").innerText = size;
+                const priceObject = JSON.parse(price);
+                const priceArray = Object.entries(priceObject).sort((a, b) => parseFloat(a[1].price) - parseFloat(b[1].price));
+                document.getElementById("modalCurrentPrice").innerText = JSON.stringify(priceArray);
+                $('#myModal').modal('show');
+            }
+
+            document.getElementById("saveButton").onclick = async function() {
+                var newSource = document.getElementById("newSource").value;
+                var latestPrice = document.getElementById("latestPrice").value;
+                var productName = document.getElementById("modalProduct").innerText;
+                var productId = document.getElementById("productId").innerText;
+                if (!newSource || !latestPrice) {
+                    alert("Please fill in all fields.");
+                    return;
+                }
+
+                try {
+                    let response = await fetch('/update-price', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            productId,
+                            productName,
+                            newSource,
+                            latestPrice
+                        })
+                    });
+
+                    let result = await response.json();
+                    if (result.ok) {
+                        alert("New Source: " + newSource + "\nNew Price: $" + latestPrice);
+                        window.location.reload();
+                    } else {
+                        alert("Error: " + result.error);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert("An error occurred while saving the data.");
+                }
+
+                $('#myModal').modal('hide');
+            }
+        
+            document.getElementById('newProductForm').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                try {
+                    let response = await fetch('/add-product', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    let result = await response.json();
+                    if (result.ok) {
+                        alert("Product added successfully");
+                        window.location.reload();
+                    } else {
+                        alert("Error: " + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert("An error occurred while submitting the product.");
+                }
             });
+        </script>
 
-            let result = await response.json();
-            if (result.ok) {
-                alert("New Source: " + newSource + "\nNew Price: $" + latestPrice);
-                window.location.reload();
-            } else {
-                alert("Error: " + result.error);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert("An error occurred while saving the data.");
-        }
-
-        $('#myModal').modal('hide');
-    }
-</script>
-
-</body>
+    </body>
 </html>

@@ -47,31 +47,81 @@ app.get('/', async function(req, res) {
 
 app.post('/update-price', async function(req, res) {
   try {
+    const productId = parseInt(req.body.productId);
+    const newSource = req.body.newSource;
+    const latestPrice = req.body.latestPrice;
+    const currency = req.body.currency || "SGD"; // Default to SGD if not provided
+    const thumbsUp = req.body.thumbsUp || 0; // Default to 0 if not provided
+    const thumbsDown = req.body.thumbsDown || 0; // Default to 0 if not provided
+
+    // Fetch the product
     const product = await prisma.product.findUnique({
-      where: {
-        id: parseInt(req.body.productId)
-      },
+      where: { id: productId },
     });
 
-    const price = product.price;
-    price[req.body.newSource] = req.body.latestPrice;
-    
+    if (!product) {
+      return res.status(404).json({ ok: false, message: 'Product not found' });
+    }
+    const lastUpdated = new Date().toLocaleString();
+
+    // Parse the price field as JSON
+    let others = product.others;
+
+    // Update or add the new source price information
+    others[newSource] = {
+      price: latestPrice,
+      currency: currency,
+      thumbsUp: thumbsUp,
+      thumbsDown: thumbsDown,
+      lastUpdated: lastUpdated
+    };
+
     // Update the product with the modified price
     const updatedProduct = await prisma.product.update({
-      where: {
-        id: parseInt(req.body.productId),
-      },
+      where: { id: productId },
+      data: { others: others },
+    });
+
+    res.json({ ok: true, message: 'Product price updated successfully' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ ok: false, message: 'An error occurred while updating the product price' });
+  }
+});
+
+app.post('/add-product', async function(req, res)  {
+  try {    
+    console.log("-->" + JSON.stringify(req));
+    
+
+    const newProduct = await prisma.product.create({
       data: {
-        price: price,
-      },
+        product: "ABCD",
+        size: "0",
+        currentPrice:0.0,
+        fourWeekHigh:0.0,
+        fourWeekLow:0.0,
+        imageURL: " ",
+        price:{},
+        thumbsDownCnt:0,
+        thumbsUpCnt:0,
+        others: {
+          ["Test"]: {
+            price: 4.0,
+            currency: "SGD",
+            thumbsUp: 0,
+            thumbsDown: 0,
+            lastUpdated: new Date().toLocaleString()
+          }
+        }
+      }
     });
     
-    res.json({ ok: true, message: 'Product price updated successfully' });
-
-    } catch (error) {
-      res.render('pages/about');
-      console.log(error);
-    } 
+    res.json({ ok: true, message: 'Product added successfully' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ ok: false, message: 'An error occurred while adding the product' });
+  }
 });
 
 
