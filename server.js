@@ -33,10 +33,8 @@ app.get('/', async function(req, res) {
           ]
         });
 
-        console.log("Product = " + JSON.stringify(products));
+        // console.log("Product = " + JSON.stringify(products));
 
-        // Render the homepage with all the blog posts
-        // await res.render('pages/home', { blogs: blogs });
         await res.render('pages/home', { products: products });
 
       } catch (error) {
@@ -89,25 +87,23 @@ app.post('/update-price', async function(req, res) {
   }
 });
 
-app.post('/add-product', async function(req, res)  {
-  try {    
-    console.log("-->" + JSON.stringify(req));
-    
-
+app.post('/add-product', async function(req, res) {
+  const { name, price, source, size, imageURL} = req.body;
+  try { 
     const newProduct = await prisma.product.create({
       data: {
-        product: "ABCD",
-        size: "0",
+        product: name,
+        size: size,
         currentPrice:0.0,
         fourWeekHigh:0.0,
         fourWeekLow:0.0,
-        imageURL: " ",
+        imageURL: imageURL,
         price:{},
         thumbsDownCnt:0,
         thumbsUpCnt:0,
         others: {
-          ["Test"]: {
-            price: 4.0,
+          [source]: {
+            price: price,
             currency: "SGD",
             thumbsUp: 0,
             thumbsDown: 0,
@@ -116,7 +112,7 @@ app.post('/add-product', async function(req, res)  {
         }
       }
     });
-    
+
     res.json({ ok: true, message: 'Product added successfully' });
   } catch (error) {
     console.log(error);

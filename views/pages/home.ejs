@@ -40,6 +40,7 @@
             }
         </style>
     </head>
+    
     <body>
 
         <!-- Top menu with search bar -->
@@ -56,6 +57,7 @@
                 </div>
             </div>
         </header>
+        
         <main>
             <section class="py-5 text-center container">
                 <div class="row py-lg-5">
@@ -85,14 +87,11 @@
                                     priceArray.slice(0, 5).forEach(([store, details], index) => { %>
                                         <li class="list-group-item">
                                         <div class="<%= index === 0 ? 'first-item' : '' %>">
-                                            <%= store %>: $<%= details.price %> 
+                                            <%= index+1%>. <%= store %>: $<%= details.price %>        
                                         </div>                                            
-                                        <button class="btn my-2 my-sm-0" type="button" id="upBtn"><i class="bi bi-hand-thumbs-up"><%= details.thumbsUp%></i></button>
-                                        <button class="btn my-2 my-sm-0" type="button" id="downBtn"><i class="bi bi-hand-thumbs-down"><%= details.thumbsDown%></i></button>
                                         <figcaption class="figure-caption"><%= details.lastUpdated %> </figcaption> 
                                         </li>
                                     <% }); %>
-
                                 </div>
                             </div>
                         </div>
@@ -104,28 +103,33 @@
             <!-- Form to add in new product -->
             <section class="container mt-5">
                 <h2>Submit a New Product</h2>
-                <form id="newProductForm" enctype="multipart/form-data">
+                <form id="newProductForm">
                     <div class="form-group">
-                        <label for="productName">Product Name</label>
-                        <input type="text" class="form-control" id="productName" name="productName" required>
+                        <label for="newProductName">Name</label>
+                        <input type="text" id="newProductName" class="form-control" required>
                     </div>
+
                     <div class="form-group">
-                        <label for="productSource">Source</label>
-                        <input type="text" class="form-control" id="productSource" name="productSource" required>
+                        <label for="newProductImage">Image URL</label>
+                        <input type="text" id="newProductName" class="form-control" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="productPrice">Price</label>
-                        <input type="number" class="form-control" id="productPrice" name="productPrice" step="0.01" required>
+                        <label for="newProductPrice">Price</label>
+                        <input type="number" id="newProductPrice" class="form-control" step="0.01" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="productCurrency">Currency</label>
-                        <input type="text" class="form-control" id="productCurrency" name="productCurrency" value="SGD" required>
+                        <label for="newProductSource">Source</label>
+                        <input type="text" id="newProductSource" class="form-control" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="productImage">Product Image</label>
-                        <input type="file" class="form-control-file" id="productImage" name="productImage" accept="image/*" required>
+                        <label for="newProductSize">Size</label>
+                        <input type="text" id="newProductSize" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit Product</button>
+                    
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
                 </form>
             </section>
         </main>
@@ -238,25 +242,35 @@
                 $('#myModal').modal('hide');
             }
         
-            document.getElementById('newProductForm').addEventListener('submit', async function(event) {
+            document.getElementById('newProductForm').addEventListener('submit', function(event) {
                 event.preventDefault();
-                const formData = new FormData(this);
-                try {
-                    let response = await fetch('/add-product', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    let result = await response.json();
-                    if (result.ok) {
-                        alert("Product added successfully");
+
+                const name = document.getElementById('newProductName').value;
+                const price = document.getElementById('newProductPrice').value;
+                const source = document.getElementById('newProductSource').value;
+                const size = document.getElementById('newProductSize').value;
+                const imageURL = document.getElementById('newProductImage').value;
+
+                fetch('/add-product', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, price, source, size, imageURL })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        alert('Product added successfully');
                         window.location.reload();
                     } else {
-                        alert("Error: " + result.message);
+                        alert('Error: ' + data.error);
                     }
-                } catch (error) {
+                })
+                .catch((error) => {
                     console.error('Error:', error);
-                    alert("An error occurred while submitting the product.");
-                }
+                    alert("An error occurred while adding the product.");
+                });
             });
         </script>
 
