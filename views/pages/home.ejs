@@ -91,9 +91,13 @@
                                     <ul class="list-group list-group-flush">
                                         <%
                                         const priceArray = Object.entries(p.others);
-                                        priceArray.sort((a, b) => parseFloat(a[1].price) - parseFloat(b[1].price));
-                                        priceArray.slice(0, 5).forEach(([store, details], index) => { %>
+                                        const filteredPriceArray = priceArray.filter(([store, details]) => {
+                                            return !(details.thumbsDown >= details.thumbsUp + 5);
+                                        });
 
+                                        <!-- const sortedPriceArray = filteredPriceArray.concat(priceArray.slice(filteredPriceArray.length)); -->
+                                        filteredPriceArray.sort((a, b) => parseFloat(a[1].price) - parseFloat(b[1].price));
+                                        filteredPriceArray.slice(0, 5).forEach(([store, details], index) => { %>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <div class="<%= index === 0 ? 'first-item' : 'next-item' %> <%= (details.thumbsDown >= details.thumbsUp + 5) ? 'unreliable' : '' %>">
                                                 <%= index+1%>. <%= store %>: $<%= details.price %>
