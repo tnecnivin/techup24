@@ -107,7 +107,7 @@
 
                     <div class="form-group">
                         <label for="newProductImage">Image URL</label>
-                        <input type="text" id="newProductName" class="form-control" required>
+                        <input type="text" id="newProductImage" class="form-control" required>
                     </div>
                     
                     <div class="form-group">
@@ -204,6 +204,7 @@
                 var latestPrice = document.getElementById("latestPrice").value;
                 var productName = document.getElementById("modalProduct").innerText;
                 var productId = document.getElementById("productId").innerText;
+                
                 if (!newSource || !latestPrice) {
                     alert("Please fill in all fields.");
                     return;
