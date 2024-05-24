@@ -120,6 +120,83 @@ app.post('/add-product', async function(req, res) {
   }
 });
 
+app.post('/upVote', async function(req, res) {
+  try {
+    const productId = parseInt(req.body.productId);
+    const source = req.body.source;
+    console.log("source=" + source );
+    // Fetch the product
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
 
+    if (!product) {
+      return res.status(404).json({ ok: false, message: 'Product not found' });
+    }
+    const lastUpdated = new Date().toLocaleString();
+
+    // Parse the price field as JSON
+    let others = product.others;
+
+    others[source] = {
+      price: product.others[source].price,
+      currency: product.others[source].currency,
+      thumbsUp: product.others[source].thumbsUp+1,
+      thumbsDown:  product.others[source].thumbsDown,
+      lastUpdated: lastUpdated
+    };
+
+    // Update the product with the modified price
+    const updatedProduct = await prisma.product.update({
+      where: { id: productId },
+      data: { others: others },
+    });
+
+    res.json({ ok: true, message: 'Product price updated successfully' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ ok: false, message: 'An error occurred while updating the product price' });
+  }
+});
+
+app.post('/downVote', async function(req, res) {
+  try {
+    const productId = parseInt(req.body.productId);
+    const source = req.body.source;
+
+    // Fetch the product
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
+
+    if (!product) {
+      return res.status(404).json({ ok: false, message: 'Product not found' });
+    }
+    const lastUpdated = new Date().toLocaleString();
+
+    // Parse the price field as JSON
+    let others = product.others;
+    
+    // Update or add the new source price information
+    others[source] = {
+      price: product.others[source].price,
+      currency: product.others[source].currency,
+      thumbsUp: product.others[source].thumbsUp,
+      thumbsDown:  product.others[source].thumbsDown+1,
+      lastUpdated: lastUpdated
+    };
+
+    // Update the product with the modified price
+    const updatedProduct = await prisma.product.update({
+      where: { id: productId },
+      data: { others: others },
+    });
+
+    res.json({ ok: true, message: 'Product price updated successfully' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ ok: false, message: 'An error occurred while updating the product price' });
+  }
+});
 // Tells the app which port to run on
 app.listen(8080);

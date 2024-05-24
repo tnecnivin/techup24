@@ -32,12 +32,25 @@
                 font-weight: bold;
             }
             .min-h-400 {
-            min-height: 400px;
+                min-height: 400px;
             }
             .first-item{
+                font-size: 1em;
                 font-weight: bold;
                 color: green;
             }
+            .next-item{
+                font-size: 0.8rem;
+            }
+            .redthumb{
+                color:red;
+            }
+            .unreliable{
+                color:rgb(178, 175, 175);
+                font-weight:lighter;
+                text-decoration: line-through;
+            }
+
         </style>
     </head>
     
@@ -58,8 +71,7 @@
             </div>
         </header>
         
-        <main>
-            
+        <main>     
             <div>
                 <img src="/images/supermarketBanner.png" alt="banner" class="img-fluid h-25">
             </div>  
@@ -77,15 +89,18 @@
                                     <h5 class="card-title"><%= p.product %></h5>
                                     <p class="card-text"><%= p.size %></p>
                                     <ul class="list-group list-group-flush">
-                                    <%
-                                    const priceArray = Object.entries(p.others);
-                                    priceArray.sort((a, b) => parseFloat(a[1].price) - parseFloat(b[1].price));
-                                    priceArray.slice(0, 5).forEach(([store, details], index) => { %>
-                                        <li class="list-group-item">
-                                        <div class="<%= index === 0 ? 'first-item' : '' %>">
-                                            <%= index+1%>. <%= store %>: $<%= details.price %>        
-                                        </div>                                            
-                                        <figcaption class="figure-caption"><%= details.lastUpdated %> </figcaption> 
+                                        <%
+                                        const priceArray = Object.entries(p.others);
+                                        priceArray.sort((a, b) => parseFloat(a[1].price) - parseFloat(b[1].price));
+                                        priceArray.slice(0, 5).forEach(([store, details], index) => { %>
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="<%= index === 0 ? 'first-item' : 'next-item' %> <%= (details.thumbsDown >= details.thumbsUp + 5) ? 'unreliable' : '' %>">
+                                                <%= index+1%>. <%= store %>: $<%= details.price %>
+                                                <button class="shadow-none border-0 bg-transparent" onclick="doUpVote('<%= p.id %>','<%= store %>')"> <i class="bi bi-hand-thumbs-up-fill"></i><%=details.thumbsUp%></button>  
+                                                <button class="shadow-none border-0 bg-transparent" onclick="doDownVote('<%= p.id %>', '<%= store %>')"> <i class="bi bi-hand-thumbs-down-fill redthumb"></i><%=details.thumbsDown%></button>              
+                                            </div>                                        
+                                            <!-- <figcaption class="figure-caption"><%= details.lastUpdated %> </figcaption>  -->    
                                         </li>
                                     <% }); %>
                                 </div>
@@ -269,6 +284,53 @@
                     alert("An error occurred while adding the product.");
                 });
             });
+         
+            async function  doUpVote(productId, source){
+                console.log("doUpvote="+ source);
+
+                fetch('/upVote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId , source})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert("An error occurred while upvoting the product.");
+                });
+            }
+
+            async function  doDownVote(productId, source){
+
+                fetch('/downVote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId, source })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert("An error occurred while downvoting the product.");
+                });
+                }
         </script>
 
     </body>
