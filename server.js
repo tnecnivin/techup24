@@ -124,7 +124,6 @@ app.post('/upVote', async function(req, res) {
   try {
     const productId = parseInt(req.body.productId);
     const source = req.body.source;
-    console.log("source=" + source );
     // Fetch the product
     const product = await prisma.product.findUnique({
       where: { id: productId },
