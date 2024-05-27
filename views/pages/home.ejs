@@ -79,7 +79,6 @@
             <section class="py-5 text-center container">
                 <div class="row py-lg-5">
                 <div class="col-lg-6 col-md-8 mx-auto">
-                    <!-- <h1 class="fw-light">A Community For Price Comparison</h1> -->
                     <p class="lead text-body-secondary">A Community For Price Comparison</p>
                 </div>
                 </div>
@@ -181,7 +180,7 @@
                         <p id="productId" class="d-none"></p>
                         <p><strong>Product:</strong> <span id="modalProduct"></span></p>
                         <p><strong>Size:</strong> <span id="modalSize"></span></p>
-                        <p><strong>Current Prices:</strong> <span id="modalCurrentPrice"></span></p>
+                        <!-- <p><strong>Current Prices:</strong> <span id="modalCurrentPrice"></span></p> -->
                         <div class="form-group">
                             <label for="newSource">Source</label>
                             <input type="text" class="form-control" id="newSource">
@@ -221,9 +220,9 @@
                 document.getElementById("modalImage").src = imageURL;
                 document.getElementById("modalProduct").innerText = product;
                 document.getElementById("modalSize").innerText = size;
-                const priceObject = JSON.parse(price);
-                const priceArray = Object.entries(priceObject).sort((a, b) => parseFloat(a[1].price) - parseFloat(b[1].price));
-                document.getElementById("modalCurrentPrice").innerText = JSON.stringify(priceArray);
+                // const priceObject = JSON.parse(price);
+                // const priceArray = Object.entries(priceObject).sort((a, b) => parseFloat(a[1].price) - parseFloat(b[1].price));
+                // document.getElementById("modalCurrentPrice").innerText = JSON.stringify(priceArray);
                 $('#myModal').modal('show');
             }
 
