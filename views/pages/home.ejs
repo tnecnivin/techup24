@@ -45,6 +45,9 @@
             .redthumb{
                 color:red;
             }
+            .bluethumb{
+                color:#3399CC;
+            }
             .unreliable{
                 color:rgb(178, 175, 175);
                 font-weight:lighter;
@@ -111,7 +114,7 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <div class="<%= index === 0 ? 'first-item' : 'next-item' %> <%= (details.thumbsDown >= details.thumbsUp + 5) ? 'unreliable' : '' %>">
                                                 <%= index+1%>. <%= store %>: $<%= details.price %>
-                                                <button class="shadow-none border-0 bg-transparent" onclick="doUpVote('<%= p.id %>','<%= store %>')"> <i class="bi bi-hand-thumbs-up-fill"></i><%=details.thumbsUp%></button>  
+                                                <button class="shadow-none border-0 bg-transparent" onclick="doUpVote('<%= p.id %>','<%= store %>')"> <i class="bi bi-hand-thumbs-up-fill bluethumb" ></i><%=details.thumbsUp%></button>  
                                                 <button class="shadow-none border-0 bg-transparent" onclick="doDownVote('<%= p.id %>', '<%= store %>')"> <i class="bi bi-hand-thumbs-down-fill redthumb"></i><%=details.thumbsDown%></button>              
                                             </div>                                        
                                             <!-- <figcaption class="figure-caption"><%= details.lastUpdated %> </figcaption>  -->    
