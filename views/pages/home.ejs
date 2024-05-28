@@ -70,7 +70,7 @@
                         <strong>Best Price SG</strong>
                     </a>
                     <form class="form-inline ml-auto">
-                        <input class="form-control mr-sm-2" type="search" id="searchBar" onkeyup="mySearchFunction()" placeholder="Search">
+                        <input class="form-control mr-sm-2" type="search" id="searchBar" onkeyup="mySearchFunction()" placeholder="Search for product">
                     </form>
                 </div>
             </div>
@@ -84,7 +84,7 @@
             <section class="py-5 text-center container">
                 <div class="row py-lg-5">
                 <div class="col-lg-6 col-md-8 mx-auto">
-                    <p class="lead text-body-secondary">A Community for Price Comparison</p>
+                    <h1>A Community for Price Comparison</h1>
                 </div>
                 </div>
             </section> 
@@ -94,7 +94,7 @@
                 <div class="container">
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="productdiv">
                         <% products.forEach(p => { %>
-                        <div class="col product-item" data-product="<%= p.product.toLowerCase() %>">
+                        <div class="col product-item mb-3" data-product="<%= p.product.toLowerCase() %>">
                             <div class="card shadow-sm">
                                 <img src="<%= p.imageURL %>" class="card-img-top" alt="<%= p.product %>" 
                                     onclick="openModal('<%= p.id %>', '<%= p.imageURL %>', '<%= p.product %>', '<%= p.size %>', '<%= JSON.stringify(p.price) %>')">
